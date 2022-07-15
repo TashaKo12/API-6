@@ -14,7 +14,7 @@ def get_comics(comics_url):
     print(comment)
     download_image(image_comics_url, file_name)
 
-def check_key(api_url, client_id, access_token):
+def check_key(api_url, access_token):
     api_metod = "groups.get"
     metod_url = api_url.format(api_metod)
 
@@ -26,6 +26,16 @@ def check_key(api_url, client_id, access_token):
     response = requests.get(metod_url, params=params)
     print(response.json())
 
+def get_addresses_photos(api_url, access_token, client_id):
+    api_metod = "photos.getWallUploadServer"
+    metod_url = api_url.format(api_metod)
+    params = {
+        "access_token": access_token,
+        "group_id": client_id,
+        "v": 5.131
+    }
+    response = requests.get(metod_url, params=params)
+    print(response.json())
 
 
 def main():
@@ -35,7 +45,8 @@ def main():
     comics_url = "https://xkcd.com/1/info.0.json"
     api_url = "https://api.vk.com/method/{}"
     #get_comics(comics_url)
-    check_key(api_url, client_id, access_token)
+    #check_key(api_url, access_token)
+    get_addresses_photos(api_url, access_token, client_id)
 
 
 if __name__ == "__main__":
