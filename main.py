@@ -1,4 +1,7 @@
+import os
+
 import requests
+from dotenv import load_dotenv
 
 from download_image import download_image
 
@@ -13,6 +16,8 @@ def get_comics(comics_url):
 
 
 def main():
+    load_dotenv()
+    client_id = os.environ["CLIENT_ID"]
     comics_url = "https://xkcd.com/1/info.0.json"
     get_comics(comics_url)
 
