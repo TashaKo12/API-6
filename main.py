@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 from download_image import download_image
 
 
-def get_comics(comics_url):
+def get_image_comics(comics_url):
     response = requests.get(comics_url)
     image_comics_url = response.json()["img"]
     file_name = "com.jpg"
     comment = response.json()["alt"]
-    print(comment)
     download_image(image_comics_url, file_name)
+
 
 def check_key(api_url, access_token):
     api_metod = "groups.get"
@@ -24,7 +24,9 @@ def check_key(api_url, access_token):
         "v": 5.131
     }
     response = requests.get(metod_url, params=params)
+    response.raise_for_status()
     print(response.json())
+
 
 def get_addresses_photos(api_url, access_token, client_id):
     api_metod = "photos.getWallUploadServer"
@@ -35,7 +37,20 @@ def get_addresses_photos(api_url, access_token, client_id):
         "v": 5.131
     }
     response = requests.get(metod_url, params=params)
+    response.raise_for_status()
+    return response.json()["response"]["upload_url"]
+
+
+def upload_in_server(dowmload_adress_url, file_name="com.jpg"):
+    with open(file_name, 'rb') as file:
+        files={
+            "photo": file
+        }
+        response = requests.post(dowmload_adress_url, files=files)
+        response.raise_for_status()
+    
     print(response.json())
+
 
 
 def main():
@@ -44,9 +59,11 @@ def main():
     access_token = os.environ["ACCESS_TOKEN"]
     comics_url = "https://xkcd.com/1/info.0.json"
     api_url = "https://api.vk.com/method/{}"
-    #get_comics(comics_url)
+    get_image_comics(comics_url)
     #check_key(api_url, access_token)
-    get_addresses_photos(api_url, access_token, client_id)
+    dowmload_adress_url = get_addresses_photos(api_url, access_token, client_id)
+    upload_in_server(dowmload_adress_url)
+    
 
 
 if __name__ == "__main__":
